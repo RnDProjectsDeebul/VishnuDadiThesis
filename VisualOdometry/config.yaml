@@ -1,0 +1,30 @@
+
+# These values are obtained from the camera captures csv file. (output of AI Capture app)
+
+# camera intrinsics
+intrinsics :
+  f_x : 2768.2263
+  f_y : 2772.6309
+  c_x : 1992.2175
+  c_y : 1528.0929
+
+# camera distortion coefficients
+distortion_coefficients': 
+  k1: 0.07362599
+  k2: -0.115101196
+  p1: 0.060033854
+  p2: 0.0
+  k3: 0.0
+
+# lens pose rotation
+lens_pose_rotation:
+  qw: 0.7071
+  qx: -0.7071
+  qy: 0.0
+  qz: 0.0
+
+# lens pose translation
+lens_pose_translation:
+  tx: 0.0
+  ty: 0.0
+  tz: 0.0

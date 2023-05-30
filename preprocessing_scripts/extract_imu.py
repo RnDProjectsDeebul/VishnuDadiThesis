@@ -102,7 +102,7 @@ class ExtractIMUData:
             
 
 if __name__ == '__main__':
-    data_dir = Path('/home/dadi_vardhan/Downloads/escarda/5_row_aruco/capture_20230509_123316')
+    data_dir = Path('/home/dadi_vardhan/Master_Thesis/custom_data/Raw_captures/capture_20230318_161741')
     imu_data = ExtractIMUData(data_dir)
     imu_df = imu_data.extract()
     imu_data.save(imu_df)
