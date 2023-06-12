@@ -62,11 +62,11 @@ class VisualOdometry:
             ])
         
         trans = params['lens_pose_translation']
-        t = np.array([trans['tx'],trans['ty'], trans['tz']]).reshape(3,1)
+        t = np.array([[trans['tx']],[trans['ty']], [trans['tz']]])
+        #t = np.array([trans['tx'],trans['ty'],trans['tz']])
 
         # Concatenate R and t to form the extrinsic matrix
         RT = np.hstack([R, t])
-
         # Calculate the projection matrix
         P = np.dot(K, RT)
 
@@ -82,6 +82,8 @@ class VisualOdometry:
 
             if not success:
                 break
+            # change orientation of the frame
+            frame = cv2.rotate(frame, cv2.ROTATE_90_CLOCKWISE)
 
             yield frame_id, frame
 
@@ -216,15 +218,31 @@ class VisualOdometry:
             # print(t)
             return R2, np.ndarray.flatten(t)
 
+    @staticmethod
+    def _load_images(filepath):
+        """
+        Loads the images
+
+        Parameters
+        ----------
+        filepath (str): The file path to image dir
+
+        Returns
+        -------
+        images (list): grayscale images
+        """
+        image_paths = [os.path.join(filepath, file) for file in sorted(os.listdir(filepath))]
+        return [cv2.imread(path, cv2.IMREAD_GRAYSCALE) for path in image_paths]
+
         
     def run(self):
+        #all_images = self._load_images("/home/dadi_vardhan/Master_Thesis/VisualSLAM/KITTI_sequence_2/image_l")
         previous_frame = None
         current_pose = np.eye(4)
         for frame_id, frame in tqdm(self.read_video(self.video_path)):
-
-            if frame_id  == 2000:
-                break
-
+        #for frame_id, frame in enumerate(all_images):
+            # if frame_id  == 500:
+            #     break
             current_frame = frame
             if previous_frame is None:
                 previous_frame = current_frame
@@ -239,35 +257,64 @@ class VisualOdometry:
             self.estimated_trajectory.append(current_pose)
 
     
-    # def plot_trajectory(self):
-    #     trajectory = np.array(self.estimated_trajectory)
-    #     x = trajectory[:, 0, 3]
-    #     y = trajectory[:, 1, 3]
-    #     z = trajectory[:, 2, 3]
-    #     fig = plt.figure()
-    #     ax = fig.add_subplot(111, projection='3d')
-    #     #ax = fig.add_subplot(111)
-    #     ax.plot(x, y, z, marker='x')
-    #     #ax.plot(x, y, marker='x')
-    #     ax.set_xlabel('X')
-    #     ax.set_ylabel('Y')
-    #     ax.set_zlabel('Z')
+    def plot_trajectory(self):
+        trajectory = np.array(self.estimated_trajectory)
+        x = trajectory[:, 0, 3]
+        y = trajectory[:, 1, 3]
+        z = trajectory[:, 2, 3]
+        fig = plt.figure()
+        ax = fig.add_subplot(111, projection='3d')
+        #ax = fig.add_subplot(111)
+        ax.plot(x, y, z, marker='x')
+        #ax.plot(x, y, marker='x')
+        ax.set_xlabel('X')
+        ax.set_ylabel('Y')
+        ax.set_zlabel('Z')
 
-    #     plt.title('Pose Trajectory')
-    #     plt.show()
+        plt.title('Pose Trajectory')
+        plt.show()
 
-    #     # save the trajectory
-    #     np.save('trajectory.npy', trajectory)
+        # save the trajectory
+        np.save('trajectory.npy', trajectory)
 
-    #     # save picture of trajectory
-    #     plt.savefig('trajectory.png')
+        # save picture of trajectory
+        plt.savefig('trajectory.png')
 
+def plot_2d(npy):
+    trajectory = np.load(npy)
+    x = trajectory[:, 0, 3]
+    y = trajectory[:, 1, 3]
+    z = trajectory[:, 2, 3]
+    # plt.plot(x, y, marker='x')
+    # plt.title('Pose Trajectory')
+    # plt.show()
+    # create a subplot with all possible axes permutations and plot the data
+    fig, axs = plt.subplots(3, 3, figsize=(15, 15))
+    axs[0, 0].plot(x, y)
+    axs[0, 0].set_title('x vs y')
+    axs[0, 1].plot(x, z)
+    axs[0, 1].set_title('x vs z')
+    axs[0, 2].plot(y, z)
+    axs[0, 2].set_title('y vs z')
+    axs[1, 0].plot(y, x)
+    axs[1, 0].set_title('y vs x')
+    axs[1, 1].plot(z, x)
+    axs[1, 1].set_title('z vs x')
+    axs[1, 2].plot(z, y)
+    axs[1, 2].set_title('z vs y')
+    axs[2, 0].plot(x, x)
+    axs[2, 0].set_title('x vs x')
+    axs[2, 1].plot(y, y)
+    axs[2, 1].set_title('y vs y')
+    axs[2, 2].plot(z, z)
+    axs[2, 2].set_title('z vs z')
+    plt.show()
 
 if __name__ == "__main__":
-    vo = VisualOdometry(video_path="/home/dadi_vardhan/Downloads/escarda/5_row_aruco/capture_20230509_120504/camera_0_5.mp4")
-    vo.run()
-    vo.plot_trajectory()
-    
+    # vo = VisualOdometry(video_path="/home/dadi_vardhan/Downloads/escarda/5_row_aruco/capture_20230509_122606/camera_0_5.mp4")
+    # vo.run()
+    # vo.plot_trajectory()
+    plot_2d('trajectory.npy')
 
 
 
