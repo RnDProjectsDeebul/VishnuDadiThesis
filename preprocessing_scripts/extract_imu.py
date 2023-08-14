@@ -60,16 +60,20 @@ class ExtractIMUData:
                 accel_y = row[' Value1']
                 accel_z = row[' Value2']
                 accel_data.append([timestamp_ns, timestamp_s, accel_x, accel_y, accel_z])
-            elif row['Sensor'] == 1:
+            elif row['Sensor'] == 3:
                 gyro_x = row[' Value0']
                 gyro_y = row[' Value1']
                 gyro_z = row[' Value2']
                 gyro_data.append([timestamp_ns, timestamp_s, gyro_x, gyro_y, gyro_z])
-            elif row['Sensor'] == 3:
+            elif row['Sensor'] == 1:
                 mag_x = row[' Value0']
                 mag_y = row[' Value1']
                 mag_z = row[' Value2']
                 mag_data.append([timestamp_ns, timestamp_s, mag_x, mag_y, mag_z])
+        
+        print(f'Length of accel data: {len(accel_data)}')
+        print(f'Length of gyro data: {len(gyro_data)}')
+        print(f'Length of mag data: {len(mag_data)}')
 
         for idx, row in tqdm(enumerate(accel_data), total=len(accel_data),
                              desc='Creating IMU dataframe'):
@@ -102,7 +106,7 @@ class ExtractIMUData:
             
 
 if __name__ == '__main__':
-    data_dir = Path('/home/dadi_vardhan/Master_Thesis/custom_data/Raw_captures/capture_20230318_161741')
+    data_dir = Path('/media/dadi_vardhan/01D8FC839716D180/Thesis_data/camera_mounted/day/capture_20230511_120901')
     imu_data = ExtractIMUData(data_dir)
     imu_df = imu_data.extract()
     imu_data.save(imu_df)

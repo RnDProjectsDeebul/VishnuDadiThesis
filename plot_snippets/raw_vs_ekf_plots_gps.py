@@ -5,11 +5,11 @@ from filterpy.kalman import ExtendedKalmanFilter
 from filterpy.common import Q_discrete_white_noise
 
 # Read data from CSV
-df = pd.read_csv('/home/escarda-lab/Vishnu_thesis/camera_mounted/night/capture_20230522_233429/location.csv')  
+df = pd.read_csv('/media/dadi_vardhan/01D8FC839716D180/Thesis_data/camera_mounted/day/capture_20230511_120901/location.csv')  
 
 # Extract Latitude and Longitude columns
 latitude_raw = df[' Latitude'].values
-longitude_raw = df[' Longitude'].values
+longitude_raw = df[' Altitude'].values
 
 # Computing dt from time stamps
 measurment_accuracy = df[' Accuracy'].mean() # upto how many meters
@@ -79,7 +79,7 @@ def forceAspect(ax,aspect=1):
 
 time = df[' Time'].values/1e9
 
-# Create the plot
+# # Create the plot
 fig, axs = plt.subplots(2, figsize=(10, 12))
 
 # Plot raw and EKF X position

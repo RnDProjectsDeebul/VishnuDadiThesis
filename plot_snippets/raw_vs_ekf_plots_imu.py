@@ -6,7 +6,7 @@ from filterpy.common import Q_discrete_white_noise
 from scipy.integrate import cumtrapz
 
 # Read data from CSV
-df = pd.read_csv('/home/escarda-lab/Vishnu_thesis/5_row_aruco/Tests/capture_20230509_120504/imu.csv')
+df = pd.read_csv('/media/dadi_vardhan/01D8FC839716D180/Thesis_data/camera_mounted/night/capture_20230522_233429/imu.csv')
 
 # Extracting accel_x and accel_y columns
 accel_x_raw = df['accel_x'].values
@@ -63,68 +63,68 @@ for ax, ay in zip(accel_x_raw, accel_y_raw):
 time = df['timestamp_s']
 
 # # Create the plot
+fig, axs = plt.subplots(2, figsize=(10, 12))
+
+# Plot raw and EKF X position
+axs[0].plot(time, pos_x_raw, label='Raw X Position', color='b', alpha=0.5)
+axs[0].plot(time, pos_x_ekf, label='EKF X Position', color='r')
+
+# Decorate the plot
+axs[0].set_title('X Position: Raw vs. EKF')
+axs[0].set_xlabel('Time (s)')
+axs[0].set_ylabel('X Position (m)')
+axs[0].legend(loc='lower left')
+axs[0].grid(True)
+axs[0].set_aspect("equal", adjustable='datalim')
+
+# Plot raw and EKF Y position
+axs[1].plot(time, pos_y_raw, label='Raw Y Position', color='b', alpha=0.5)
+axs[1].plot(time, pos_y_ekf, label='EKF Y Position', color='r')
+
+# Decorate the plot
+axs[1].set_title('Y Position: Raw vs. EKF')
+axs[1].set_xlabel('Time (s)')
+axs[1].set_ylabel('Y Position (m)')
+axs[1].legend(loc='upper left')
+axs[1].grid(True)
+
+# Save the plot
+plt.savefig('ekf_vs_raw_2D_position_XYtime.png', dpi=300)
+
+# # Create individual axes plot
+# #---------------------------------------------------------
 # fig, axs = plt.subplots(2, figsize=(10, 12))
 
 # # Plot raw and EKF X position
-# axs[0].plot(time, pos_x_raw, label='Raw X Position', color='b', alpha=0.5)
-# axs[0].plot(time, pos_x_ekf, label='EKF X Position', color='r')
+# axs[0].plot(pos_x_raw, pos_y_raw, label='Raw Trajectory', color='b', alpha=0.5)
+# # axs[0].plot(pos_x_ekf, pos_y_ekf, label='EKF Trajectory', color='r')
 
 # # Decorate the plot
-# axs[0].set_title('X Position: Raw vs. EKF')
-# axs[0].set_xlabel('Time (s)')
-# axs[0].set_ylabel('X Position (m)')
-# axs[0].legend(loc='lower left')
+# axs[0].set_title('XY Trajectory: Raw')
+# axs[0].set_xlabel('X Position (m)')
+# axs[0].set_ylabel('Y Position (m)')
+# axs[0].legend(loc='upper right')
 # axs[0].grid(True)
-# axs[0].set_aspect("equal", adjustable='datalim')
 
-# # Plot raw and EKF Y position
-# axs[1].plot(time, pos_y_raw, label='Raw Y Position', color='b', alpha=0.5)
-# axs[1].plot(time, pos_y_ekf, label='EKF Y Position', color='r')
+# # # Plot raw and EKF Y position
+# axs[1].plot(pos_x_ekf, pos_y_ekf, label='EKF Trajectory', color='r')
+# # axs[1].plot(time, pos_y_ekf, label='EKF Y Position', color='r')
 
 # # Decorate the plot
-# axs[1].set_title('Y Position: Raw vs. EKF')
-# axs[1].set_xlabel('Time (s)')
+# axs[1].set_title('XY Trajectory: EKF')
+# axs[1].set_xlabel('X Position (m)')
 # axs[1].set_ylabel('Y Position (m)')
-# axs[1].legend(loc='upper left')
+# axs[1].legend(loc='upper right')
 # axs[1].grid(True)
 
 # # Save the plot
 # plt.savefig('ekf_vs_raw_2D_position.png', dpi=300)
 
-# # Create individual axes plot
-# #---------------------------------------------------------
-fig, axs = plt.subplots(2, figsize=(10, 12))
-
-# Plot raw and EKF X position
-axs[0].plot(pos_x_raw, pos_y_raw, label='Raw Trajectory', color='b', alpha=0.5)
-# axs[0].plot(pos_x_ekf, pos_y_ekf, label='EKF Trajectory', color='r')
-
-# Decorate the plot
-axs[0].set_title('XY Trajectory: Raw')
-axs[0].set_xlabel('X Position (m)')
-axs[0].set_ylabel('Y Position (m)')
-axs[0].legend(loc='upper right')
-axs[0].grid(True)
-
-# # Plot raw and EKF Y position
-axs[1].plot(pos_x_ekf, pos_y_ekf, label='EKF Trajectory', color='r')
-# axs[1].plot(time, pos_y_ekf, label='EKF Y Position', color='r')
-
-# Decorate the plot
-axs[1].set_title('XY Trajectory: EKF')
-axs[1].set_xlabel('X Position (m)')
-axs[1].set_ylabel('Y Position (m)')
-axs[1].legend(loc='upper right')
-axs[1].grid(True)
-
-# Save the plot
-plt.savefig('ekf_vs_raw_2D_position.png', dpi=300)
-
 # Create trajecory plot
 #------------------------------------------
-# plt.figure(figsize=(10, 6))
+#plt.figure(figsize=(10, 6))
 
-# #Plot raw and EKF trajectory
+#Plot raw and EKF trajectory
 # plt.plot(pos_x_raw, pos_y_raw, label='Raw Trajectory', color='b', alpha=0.5)
 # plt.plot(pos_x_ekf, pos_y_ekf, label='EKF Trajectory', color='r')
 
